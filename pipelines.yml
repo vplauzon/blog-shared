@@ -45,6 +45,8 @@ stages:
         vmImage: ubuntu-latest
       steps:
       - checkout: none
+      - download: current
+        artifact: content
       - bash:  pwd
       - bash:  ls -l
       - bash:  ls -l $(System.DefaultWorkingDirectory)
