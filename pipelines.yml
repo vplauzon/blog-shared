@@ -36,7 +36,7 @@ stages:
     dependsOn:  []
     variables:  []
     jobs:
-    - deployment:  main
+    - job:  main
       dependsOn:  []
       variables:
         location: northcentralus
