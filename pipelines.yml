@@ -45,6 +45,9 @@ stages:
         vmImage: ubuntu-latest
       steps:
       - checkout: none
+      - bash:  pwd
+      - bash:  ls -l
+      - bash:  ls -l $(System.DefaultWorkingDirectory)
       - task: AzureResourceGroupDeployment@2
         displayName: 'Azure Deployment - Main'
         inputs:
