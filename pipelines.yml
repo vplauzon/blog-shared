@@ -36,7 +36,7 @@ stages:
     dependsOn:  []
     variables:  []
     jobs:
-    - job:  main
+    - deployment:  main
       dependsOn:  []
       variables:
         location: northcentralus
@@ -44,14 +44,18 @@ stages:
       continueOnError:  false
       pool:
         vmImage: ubuntu-latest
-        steps:
-        - task: AzureResourceGroupDeployment@2
-          displayName: 'Azure Deployment - Main'
-          inputs:
-            azureSubscription: 'devops-deploy'
-            resourceGroupName: '$(rg)'
-            location: '$(location)'
-            csmFile: '$(System.DefaultWorkingDirectory)/shared-infra/content/deploy.json'
-            csmParametersFile: '$(System.DefaultWorkingDirectory)/shared-infra/content/deploy.prod.parameters.json'
-            overrideParameters: ''
-          timeoutInMinutes: 3
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+              - checkout: none
+              - task: AzureResourceGroupDeployment@2
+                displayName: 'Azure Deployment - Main'
+                inputs:
+                  azureSubscription: 'devops-deploy'
+                  resourceGroupName: '$(rg)'
+                  location: '$(location)'
+                  csmFile: '$(System.DefaultWorkingDirectory)/shared-infra/content/deploy.json'
+                  csmParametersFile: '$(System.DefaultWorkingDirectory)/shared-infra/content/deploy.prod.parameters.json'
+                  overrideParameters: ''
+                timeoutInMinutes: 3
