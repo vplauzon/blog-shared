@@ -44,8 +44,8 @@ stages:
         vmImage: ubuntu-latest
       steps:
         variables:  []
-          location: northcentralus
-          rg: blog
+        location: northcentralus
+        rg: blog
         steps:
         - task: AzureResourceGroupDeployment@2
           displayName: 'Azure Deployment - Main'
