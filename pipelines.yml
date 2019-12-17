@@ -1,24 +1,59 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+# Help:  https://aka.ms/yaml
+
+resources:
+- repo: self
+
+variables:  []
 
 trigger:
 - master
 
-pool:
-  vmImage: 'ubuntu-latest'
+stages:
+  - stage:  build
+    dependsOn:  []
+    variables:  []
+    jobs:
+    - job:  move-templates
+      dependsOn:  []
+      variables:  []
+      continueOnError:  false
+      pool:
+        vmImage: 'ubuntu-latest'
+      steps:
+      # Copy source to "content" folder
+      - task: CopyFiles@2
+        displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)/content'
+        inputs:
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/content'
 
-steps:
-# Copy source to "content" folder
-- task: CopyFiles@2
-  displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)/content'
-  inputs:
-    TargetFolder: '$(Build.ArtifactStagingDirectory)/content'
-
-# Publish "content" artefact
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: content'
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/content'
-    ArtifactName: content
+      # Publish "content" artefact
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publish Artifact: content'
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)/content'
+          ArtifactName: content
+  - stage:  release-prod
+    dependsOn:  []
+    variables:  []
+    jobs:
+    - job:  deployment
+      dependsOn:  []
+      variables:  []
+      continueOnError:  false
+      pool:
+        vmImage: ubuntu-latest
+      steps:
+        variables:
+          location: northcentralus
+          rg: blog
+        steps:
+        - task: AzureResourceGroupDeployment@2
+          displayName: 'Azure Deployment - Main'
+          inputs:
+            azureSubscription: 'devops-deploy'
+            resourceGroupName: '$(rg)'
+            location: '$(location)'
+            csmFile: '$(System.DefaultWorkingDirectory)/shared-infra/content/deploy.json'
+            csmParametersFile: '$(System.DefaultWorkingDirectory)/shared-infra/content/deploy.prod.parameters.json'
+            overrideParameters: ''
+          timeoutInMinutes: 3
