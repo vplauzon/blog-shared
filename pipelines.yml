@@ -32,8 +32,8 @@ stages:
         inputs:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)/content'
           ArtifactName: content
-  - stage:  prod
-    dependsOn:  []
+  - stage:  release
+    dependsOn:  build
     variables:  []
     jobs:
     - job:  main
