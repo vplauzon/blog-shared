@@ -38,9 +38,9 @@ stages:
     jobs:
     - job:  deployment
       dependsOn:  []
-        variables:
-          location: northcentralus
-          rg: blog
+      variables:
+        location: northcentralus
+        rg: blog
       continueOnError:  false
       pool:
         vmImage: ubuntu-latest
