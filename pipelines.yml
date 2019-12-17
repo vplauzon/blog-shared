@@ -13,7 +13,7 @@ stages:
     dependsOn:  []
     variables:  []
     jobs:
-    - job:  move-templates
+    - job:  main
       dependsOn:  []
       variables:  []
       continueOnError:  false
@@ -32,11 +32,11 @@ stages:
         inputs:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)/content'
           ArtifactName: content
-  - stage:  release-prod
+  - stage:  prod
     dependsOn:  []
     variables:  []
     jobs:
-    - job:  deployment
+    - job:  main
       dependsOn:  []
       variables:
         location: northcentralus
