@@ -43,7 +43,7 @@ stages:
       pool:
         vmImage: ubuntu-latest
       steps:
-        variables:
+        variables:  []
           location: northcentralus
           rg: blog
         steps:
