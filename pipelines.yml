@@ -50,6 +50,8 @@ stages:
       - bash:  pwd
       - bash:  ls -l
       - bash:  ls -l $(System.DefaultWorkingDirectory)
+      - bash:  ls -l $(Pipeline.Workspace)
+      - bash:  ls -l $(Pipeline.Workspace)/content
       - task: AzureResourceGroupDeployment@2
         displayName: 'Azure Deployment - Main'
         inputs:
