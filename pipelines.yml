@@ -21,12 +21,11 @@ stages:
         vmImage: 'ubuntu-latest'
       steps:
       # Copy source to "content" folder
-      - task: CopyFiles@2
-        displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)/content'
-        inputs:
-          targetFolder: '$(Build.ArtifactStagingDirectory)/content'
-          contents:  *.json
-
+      - task:  Bash@3
+        displayName:  Copy artefacts
+        script:  |
+          mkdir content
+          cp *.json content
       # Publish "content" artefact
       - task: PublishBuildArtifacts@1
         displayName: 'Publish Artifact: content'
@@ -45,14 +44,13 @@ stages:
       pool:
         vmImage: ubuntu-latest
       steps:
+      # Don't checkout repo
       - checkout: none
+      # Download artefact from previous stage
       - download: current
         artifact: content
-      - bash:  pwd
-      - bash:  ls -l
-      - bash:  ls -l $(System.DefaultWorkingDirectory)
-      - bash:  ls -l $(Pipeline.Workspace)
       - bash:  ls -l $(Pipeline.Workspace)/content
+      # Deploy ARM template from artefact files
       - task: AzureResourceGroupDeployment@2
         displayName: Azure Deployment - deploy.json
         inputs:
