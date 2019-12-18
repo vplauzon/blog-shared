@@ -25,8 +25,8 @@ stages:
         displayName:  Copy artefacts
         inputs:
           script:  |
-            mkdir content
-            cp *.json content
+            mkdir $(Build.ArtifactStagingDirectory)/content
+            cp *.json $(Build.ArtifactStagingDirectory)/content
       # Publish "content" artefact
       - task: PublishBuildArtifacts@1
         displayName: 'Publish Artifact: content'
