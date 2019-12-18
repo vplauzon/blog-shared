@@ -24,7 +24,8 @@ stages:
       - task: CopyFiles@2
         displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)/content'
         inputs:
-          TargetFolder: '$(Build.ArtifactStagingDirectory)/content'
+          targetFolder: '$(Build.ArtifactStagingDirectory)/content'
+          contents:  *.json
 
       # Publish "content" artefact
       - task: PublishBuildArtifacts@1
@@ -53,13 +54,13 @@ stages:
       - bash:  ls -l $(Pipeline.Workspace)
       - bash:  ls -l $(Pipeline.Workspace)/content
       - task: AzureResourceGroupDeployment@2
-        displayName: 'Azure Deployment - Main'
+        displayName: Azure Deployment - deploy.json
         inputs:
-          azureSubscription: 'devops-deploy'
-          resourceGroupName: '$(rg)'
+          azureSubscription: devops-deploy
+          resourceGroupName: $(rg)
           location: '$(location)'
           templateLocation:  Linked artifact
-          csmFile: '$(System.DefaultWorkingDirectory)/shared-infra/content/deploy.json'
-          csmParametersFile: '$(System.DefaultWorkingDirectory)/shared-infra/content/deploy.prod.parameters.json'
+          csmFile: $(Pipeline.Workspace)/content/content/deploy.json
+          csmParametersFile: $(Pipeline.Workspace)/content/content/deploy.prod.parameters.json
           overrideParameters: ''
         timeoutInMinutes: 3
