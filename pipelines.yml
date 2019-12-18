@@ -20,6 +20,9 @@ stages:
       pool:
         vmImage: 'ubuntu-latest'
       steps:
+      - bash:  pwd
+        displayName:  "Name?"
+      - bash:  ls -l
       # Copy source to "content" folder
       - task:  Bash@3
         displayName:  Copy artefacts
