@@ -25,7 +25,11 @@ stages:
         displayName:  Copy artefacts
         inputs:
           script:  |
+            pwd
+            ls -l $(Build.ArtifactStagingDirectory)
             mkdir $(Build.ArtifactStagingDirectory)/content
+            ls -l $(Build.ArtifactStagingDirectory)/content
+            ls -l
             cp *.json $(Build.ArtifactStagingDirectory)/content
       # Publish "content" artefact
       - task: PublishBuildArtifacts@1
