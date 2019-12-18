@@ -21,9 +21,9 @@ stages:
         vmImage: 'ubuntu-latest'
       steps:
       # Copy source to "content" folder
-      - bash:  mkdir content
-        displayName:  mkdir
-      - bash: cp *.json content
+      - bash:  |
+          mkdir content
+          cp *.json content
         displayName:  Copy artefacts
       # Publish "content" artefact
       - task: PublishBuildArtifacts@1
@@ -57,7 +57,7 @@ stages:
           resourceGroupName: $(rg)
           location: '$(location)'
           templateLocation:  Linked artifact
-          csmFile: $(Pipeline.Workspace)/content/content/deploy.json
-          csmParametersFile: $(Pipeline.Workspace)/content/content/deploy.prod.parameters.json
+          csmFile: $(Pipeline.Workspace)/content/deploy.json
+          csmParametersFile: $(Pipeline.Workspace)/content/deploy.prod.parameters.json
           overrideParameters: ''
         timeoutInMinutes: 3
