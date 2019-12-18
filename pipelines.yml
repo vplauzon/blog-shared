@@ -26,16 +26,13 @@ stages:
         inputs:
           script:  |
             pwd
-            ls -l $(Build.ArtifactStagingDirectory)
-            mkdir $(Build.ArtifactStagingDirectory)/content
-            ls -l $(Build.ArtifactStagingDirectory)/content
-            ls -l
-            cp *.json $(Build.ArtifactStagingDirectory)/content
+            mkdir content
+            cp *.json content
       # Publish "content" artefact
       - task: PublishBuildArtifacts@1
         displayName: 'Publish Artifact: content'
         inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)/content'
+          PathtoPublish: content
           ArtifactName: content
   - stage:  release
     dependsOn:  build
