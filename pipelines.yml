@@ -23,13 +23,8 @@ stages:
       # Copy source to "content" folder
       - bash:  mkdir content
         displayName:  mkdir
-      - task:  Bash@3
+      - bash: cp *.json content
         displayName:  Copy artefacts
-        inputs:
-          script:  |
-            pwd
-            mkdir content
-            cp *.json content
       # Publish "content" artefact
       - task: PublishBuildArtifacts@1
         displayName: 'Publish Artifact: content'
