@@ -4,6 +4,15 @@
     "parameters": {
         "app-insights-name": {
             "value": "blog-insights"
+        },
+        "storageAccountName": {
+            "value": "vplblogdeploy"
+        },
+        "containerName": {
+            "value": "artefacts"
+        },
+        "apimName": {
+            "value": "vpl-blog-apim"
         }
     }
 }

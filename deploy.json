@@ -1,11 +1,39 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "app-insights-name": {
             "metadata": {
                 "description": "Name of the app insights"
             },
+            "type": "string"
+        },
+        "storageAccountName": {
+            "type": "string",
+            "minLength": 5,
+            "metadata": {
+                "description": "Unique name for the storage account used for deployments"
+            }
+        },
+        "containerName": {
+            "type": "string",
+            "minLength": 5,
+            "metadata": {
+                "description": "Container name in the storage account"
+            }
+        },
+        "apimName": {
+            "type": "string",
+            "minLength": 2,
+            "metadata": {
+                "description": "API-M's Name"
+            }
+        },
+        "appPlanName": {
+            "metadata": {
+                "description": "..."
+            },
+            "defaultValue": "blog-app-plan",
             "type": "string"
         }
     },
@@ -17,13 +45,126 @@
             "name": "[parameters('app-insights-name')]",
             "apiVersion": "2015-05-01",
             "location": "[resourceGroup().location]",
-            "tags": {},
+            "tags": {
+            },
             "kind": "web",
             "properties": {
                 "Application_Type": "web"
             },
-            "dependsOn": []
+            "dependsOn": [
+            ]
+        },
+        {
+            "apiVersion": "2019-04-01",
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[parameters('storageAccountName')]",
+            "location": "[resourceGroup().location]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "Standard_RAGRS"
+            },
+            "properties": {
+                "supportsHttpsTrafficOnly": true
+            },
+            "resources": [
+                {
+                    "apiVersion": "2019-04-01",
+                    "type": "managementPolicies",
+                    "name": "default",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+                    ],
+                    "properties": {
+                        "policy": {
+                            "rules": [
+                                {
+                                    "name": "delete-old-artefacts",
+                                    "enabled": true,
+                                    "type": "Lifecycle",
+                                    "definition": {
+                                        "filters": {
+                                            "blobTypes": [
+                                                "blockBlob"
+                                            ],
+                                            "prefixMatch": [
+                                                "[parameters('containerName')]"
+                                            ]
+                                        },
+                                        "actions": {
+                                            "baseBlob": {
+                                                "tierToCool": {
+                                                    "daysAfterModificationGreaterThan": 1
+                                                },
+                                                "delete": {
+                                                    "daysAfterModificationGreaterThan": 3
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "apiVersion": "2019-04-01",
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "name": "[concat(parameters('storageAccountName'), '/default/', parameters('containerName'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+            ],
+            "properties": {
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.ApiManagement/service",
+            "apiVersion": "2019-01-01",
+            "name": "[parameters('apimName')]",
+            "location": "[resourceGroup().location]",
+            "tags": {
+            },
+            "properties": {
+                "notificationSenderEmail": "apimgmt-noreply@mail.windowsazure.com",
+                "hostnameConfigurations": [
+                ],
+                "additionalLocations": [
+                ],
+                "customProperties": {
+                },
+                "certificates": [
+                ],
+                "enableClientCertificate": false,
+                "publisherEmail": "nobody@vplauzon.com",
+                "publisherName": "api-admin"
+            },
+            "sku": {
+                "name": "Consumption"
+            },
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "resources": [
+            ]
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2019-08-01",
+            "name": "[parameters('appPlanName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Y1",
+                "tier": "Dynamic"
+            },
+            "properties": {
+                "name": "[parameters('appPlanName')]",
+                "computeMode": "Dynamic"
+            },
+            "kind": "linux"
         }
     ],
-    "outputs": {}
+    "outputs": {
+    }
 }
