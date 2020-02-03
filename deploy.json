@@ -433,6 +433,86 @@
                                     "asset": {
                                     }
                                 }
+                            },
+                            "3": {
+                                "position": {
+                                    "x": 10,
+                                    "y": 5,
+                                    "rowSpan": 5,
+                                    "colSpan": 10
+                                },
+                                "metadata": {
+                                    "inputs": [
+                                        {
+                                            "name": "ComponentId",
+                                            "value": {
+                                                "SubscriptionId": "[subscription().subscriptionId]",
+                                                "ResourceGroup": "[resourceGroup().name]",
+                                                "Name": "[parameters('app-insights-name')]",
+                                                "ResourceId": "[variables('appInsightsId')]"
+                                            }
+                                        },
+                                        {
+                                            "name": "Query",
+                                            "value": "pageViews \r\n| where timestamp > ago(1d)\r\n| where url startswith \"https://vincentlauzon.com/20\"\r\n| summarize view=sum(1) by url, name\r\n| order by view\r\n| project name, view, name2=name\r\n| limit 10\r\n| render columnchart"
+                                        },
+                                        {
+                                            "name": "PartTitle",
+                                            "value": "Page Views"
+                                        },
+                                        {
+                                            "name": "PartSubTitle",
+                                            "value": "Last 24 hours"
+                                        },
+                                        {
+                                            "name": "resourceTypeMode",
+                                            "value": "components"
+                                        },
+                                        {
+                                            "name": "ControlType",
+                                            "value": "AnalyticsChart"
+                                        },
+                                        {
+                                            "name": "SpecificChart",
+                                            "value": "Bar"
+                                        },
+                                        {
+                                            "name": "TimeRange",
+                                            "isOptional": true
+                                        },
+                                        {
+                                            "name": "DashboardId",
+                                            "isOptional": true
+                                        },
+                                        {
+                                            "name": "Dimensions",
+                                            "value": {
+                                                "xAxis": {
+                                                    "name": "timestamp",
+                                                    "type": "datetime"
+                                                },
+                                                "yAxis": [
+                                                    {
+                                                        "name": "Hits",
+                                                        "type": "long"
+                                                    }
+                                                ],
+                                                "splitBy": [
+                                                ],
+                                                "aggregation": "Sum"
+                                            }
+                                        },
+                                        {
+                                            "name": "Version",
+                                            "value": "1.0"
+                                        }
+                                    ],
+                                    "type": "Extension/AppInsightsExtension/PartType/AnalyticsPart",
+                                    "settings": {
+                                    },
+                                    "asset": {
+                                    }
+                                }
                             }
                         }
                     }
