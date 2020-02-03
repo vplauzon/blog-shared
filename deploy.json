@@ -454,7 +454,7 @@
                                         },
                                         {
                                             "name": "Query",
-                                            "value": "pageViews \r\n| where timestamp > ago(1d)\r\n| where url startswith \"https://vincentlauzon.com/20\"\r\n| summarize view=sum(1) by url, name\r\n| order by view\r\n| project name, view, name2=name\r\n| limit 10\r\n| render columnchart"
+                                            "value": "pageViews \r\n| where timestamp > ago(1d)\r\n| where url startswith \"https://vincentlauzon.com/20\"\r\n| summarize view=sum(1) by url, name\r\n| order by view\r\n| project name, view\r\n| limit 10\r\n| render columnchart"
                                         },
                                         {
                                             "name": "PartTitle",
@@ -488,16 +488,20 @@
                                             "name": "Dimensions",
                                             "value": {
                                                 "xAxis": {
-                                                    "name": "timestamp",
-                                                    "type": "datetime"
+                                                    "name": "name",
+                                                    "type": "string"
                                                 },
                                                 "yAxis": [
                                                     {
-                                                        "name": "Hits",
+                                                        "name": "view",
                                                         "type": "long"
                                                     }
                                                 ],
                                                 "splitBy": [
+                                                    {
+                                                        "name": "name2",
+                                                        "type": "string"
+                                                    }
                                                 ],
                                                 "aggregation": "Sum"
                                             }
