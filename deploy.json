@@ -22,6 +22,13 @@
                 "description": "Unique name for the ADLS gen 2 storage account used to store AI and LA logs long term"
             }
         },
+        "kustoClusterName": {
+            "type": "string",
+            "minLength": 5,
+            "metadata": {
+                "description": "Name of Kusto cluster"
+            }
+        },
         "apimName": {
             "type": "string",
             "minLength": 2,
@@ -47,7 +54,8 @@
     "variables": {
         "appInsightsId": "[resourceId('Microsoft.Insights/components', parameters('app-insights-name'))]",
         "artefact container name": "artefacts",
-        "logs container name": "artefacts"
+        "logs container name": "artefacts",
+        "kusto log database": "ailogs"
     },
     "resources": [
         {
@@ -153,6 +161,34 @@
                     "properties": {
                         "publicAccess": "None"
                     }
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Kusto/clusters",
+            "apiVersion": "2019-05-15",
+            "name": "[parameters('kustoClusterName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Dev(No SLA)_Standard_D11_v2",
+                "capacity": "1",
+                "tier": "basic"
+            },
+            "properties": {
+            },
+            "resources": [
+                {
+                    "type": "databases",
+                    "apiVersion": "2019-05-15",
+                    "name": "[variables('kusto log database')]",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Kusto/clusters', parameters('kustoClusterName'))]"
+                    ],
+                    "properties": {
+                    },
+                    "resources": [
+                    ]
                 }
             ]
         },

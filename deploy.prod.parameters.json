@@ -11,6 +11,9 @@
         "logsStorageAccountName": {
             "value": "vplbloglogs"
         },
+        "kustoClusterName": {
+            "value": "vpl-blog-kusto"
+        },
         "apimName": {
             "value": "vpl-blog-apim"
         }
