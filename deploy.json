@@ -54,7 +54,7 @@
     "variables": {
         "appInsightsId": "[resourceId('Microsoft.Insights/components', parameters('app-insights-name'))]",
         "artefact container name": "artefacts",
-        "logs container name": "artefacts",
+        "logs container name": "ailogs",
         "kusto log database": "ailogs"
     },
     "resources": [
