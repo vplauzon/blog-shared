@@ -12,7 +12,7 @@
             "value": "vplbloglogs"
         },
         "kustoClusterName": {
-            "value": "vpl-blog-kusto"
+            "value": "vplblogkusto"
         },
         "apimName": {
             "value": "vpl-blog-apim"
