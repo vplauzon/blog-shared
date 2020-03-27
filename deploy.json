@@ -8,18 +8,18 @@
             },
             "type": "string"
         },
-        "storageAccountName": {
+        "deploymentStorageAccountName": {
             "type": "string",
             "minLength": 5,
             "metadata": {
                 "description": "Unique name for the storage account used for deployments"
             }
         },
-        "containerName": {
+        "logsStorageAccountName": {
             "type": "string",
             "minLength": 5,
             "metadata": {
-                "description": "Container name in the storage account"
+                "description": "Unique name for the ADLS gen 2 storage account used to store AI and LA logs long term"
             }
         },
         "apimName": {
@@ -45,7 +45,9 @@
         }
     },
     "variables": {
-        "appInsightsId": "[resourceId('Microsoft.Insights/components', parameters('app-insights-name'))]"
+        "appInsightsId": "[resourceId('Microsoft.Insights/components', parameters('app-insights-name'))]",
+        "artefact container name": "artefacts",
+        "logs container name": "artefacts"
     },
     "resources": [
         {
@@ -65,7 +67,7 @@
         {
             "apiVersion": "2019-04-01",
             "type": "Microsoft.Storage/storageAccounts",
-            "name": "[parameters('storageAccountName')]",
+            "name": "[parameters('deploymentStorageAccountName')]",
             "location": "[resourceGroup().location]",
             "kind": "StorageV2",
             "sku": {
@@ -77,10 +79,21 @@
             "resources": [
                 {
                     "apiVersion": "2019-04-01",
+                    "type": "blobServices/containers",
+                    "name": "[concat('default/', variables('artefact container name'))]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Storage/storageAccounts', parameters('deploymentStorageAccountName'))]"
+                    ],
+                    "properties": {
+                        "publicAccess": "None"
+                    }
+                },
+                {
+                    "apiVersion": "2019-04-01",
                     "type": "managementPolicies",
                     "name": "default",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+                        "[resourceId('Microsoft.Storage/storageAccounts', parameters('deploymentStorageAccountName'))]"
                     ],
                     "properties": {
                         "policy": {
@@ -118,14 +131,30 @@
         },
         {
             "apiVersion": "2019-04-01",
-            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
-            "name": "[concat(parameters('storageAccountName'), '/default/', parameters('containerName'))]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
-            ],
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[parameters('logsStorageAccountName')]",
+            "location": "[resourceGroup().location]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "Standard_LRS"
+            },
             "properties": {
-                "publicAccess": "None"
-            }
+                "isHnsEnabled": true,
+                "supportsHttpsTrafficOnly": true
+            },
+            "resources": [
+                {
+                    "apiVersion": "2019-04-01",
+                    "type": "blobServices/containers",
+                    "name": "[concat('default/', variables('logs container name'))]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Storage/storageAccounts', parameters('logsStorageAccountName'))]"
+                    ],
+                    "properties": {
+                        "publicAccess": "None"
+                    }
+                }
+            ]
         },
         {
             "type": "Microsoft.ApiManagement/service",

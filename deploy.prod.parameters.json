@@ -5,11 +5,11 @@
         "app-insights-name": {
             "value": "blog-insights"
         },
-        "storageAccountName": {
+        "deploymentStorageAccountName": {
             "value": "vplblogdeploy"
         },
-        "containerName": {
-            "value": "artefacts"
+        "logsStorageAccountName": {
+            "value": "vplbloglogs"
         },
         "apimName": {
             "value": "vpl-blog-apim"
