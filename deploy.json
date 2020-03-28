@@ -15,13 +15,6 @@
                 "description": "Unique name for the storage account used for deployments"
             }
         },
-        "logsStorageAccountName": {
-            "type": "string",
-            "minLength": 5,
-            "metadata": {
-                "description": "Unique name for the ADLS gen 2 storage account used to store AI and LA logs long term"
-            }
-        },
         "kustoClusterName": {
             "type": "string",
             "minLength": 5,
@@ -54,7 +47,6 @@
     "variables": {
         "appInsightsId": "[resourceId('Microsoft.Insights/components', parameters('app-insights-name'))]",
         "artefact container name": "artefacts",
-        "logs container name": "ailogs",
         "kusto log database": "ailogs"
     },
     "resources": [
@@ -133,33 +125,6 @@
                                 }
                             ]
                         }
-                    }
-                }
-            ]
-        },
-        {
-            "apiVersion": "2019-04-01",
-            "type": "Microsoft.Storage/storageAccounts",
-            "name": "[parameters('logsStorageAccountName')]",
-            "location": "[resourceGroup().location]",
-            "kind": "StorageV2",
-            "sku": {
-                "name": "Standard_LRS"
-            },
-            "properties": {
-                "isHnsEnabled": true,
-                "supportsHttpsTrafficOnly": true
-            },
-            "resources": [
-                {
-                    "apiVersion": "2019-04-01",
-                    "type": "blobServices/containers",
-                    "name": "[concat('default/', variables('logs container name'))]",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Storage/storageAccounts', parameters('logsStorageAccountName'))]"
-                    ],
-                    "properties": {
-                        "publicAccess": "None"
                     }
                 }
             ]
