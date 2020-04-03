@@ -146,6 +146,7 @@
                     "type": "databases",
                     "apiVersion": "2019-05-15",
                     "name": "[variables('kusto log database')]",
+                    "location": "East US",
                     "dependsOn": [
                         "[resourceId('Microsoft.Kusto/clusters', parameters('kustoClusterName'))]"
                     ],
