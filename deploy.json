@@ -108,7 +108,7 @@
                                                 "blockBlob"
                                             ],
                                             "prefixMatch": [
-                                                "[parameters('containerName')]"
+                                                "[variables('artefact container name')]"
                                             ]
                                         },
                                         "actions": {
