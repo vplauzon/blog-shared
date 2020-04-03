@@ -47,7 +47,7 @@
     "variables": {
         "appInsightsId": "[resourceId('Microsoft.Insights/components', parameters('app-insights-name'))]",
         "artefact container name": "artefacts",
-        "kusto log database": "ailogs"
+        "kusto log database": "ailogseastus"
     },
     "resources": [
         {
@@ -133,7 +133,7 @@
             "type": "Microsoft.Kusto/clusters",
             "apiVersion": "2019-05-15",
             "name": "[parameters('kustoClusterName')]",
-            "location": "[resourceGroup().location]",
+            "location": "East US",
             "sku": {
                 "name": "Dev(No SLA)_Standard_D11_v2",
                 "capacity": "1",
