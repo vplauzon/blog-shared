@@ -9,7 +9,7 @@
             "value": "vplblogdeploy"
         },
         "kustoClusterName": {
-            "value": "vplblogkusto"
+            "value": "vplblogkustoeastus"
         },
         "apimName": {
             "value": "vpl-blog-apim"
